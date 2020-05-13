@@ -54,7 +54,7 @@ function prompt_bday() {
   fi
 }
 ~~~~
- - is the cake font used from [nerd-fonts](https://github.com/ryanoasis/nerd-fonts). Either instal it and add it to terminal/iterm or change the icon in the script above
+ - is the cake font used from [nerd-fonts](https://github.com/ryanoasis/nerd-fonts). Either install it and add it to terminal/iterm or change the icon in the script above
 
 Close editor and run
 ~~~~shell
