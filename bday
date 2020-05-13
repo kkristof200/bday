@@ -1,0 +1,178 @@
+#!/usr/bin/env python3
+# IMPORTS
+from __future__ import print_function
+import os, argparse, sys, time
+
+
+# PATHS
+home_path = os.path.expanduser('~')
+cache_folder_path = os.path.join(home_path, '.bday_cache')
+today_cache_path = os.path.join(cache_folder_path, 'today')
+
+
+# FUNCTIONS
+def safe_remove(path):
+    try:
+        os.remove(path)
+    except:
+        pass
+
+def cache_path_for_file_name(file_name):
+    return os.path.join(cache_folder_path, file_name)
+
+def cache_path_for_day(month, day):
+    if isinstance(month, int):
+        month = str(month)
+    
+    if isinstance(day, int):
+        day = str(day)
+    
+    return cache_path_for_file_name(month.zfill(2) + '_' + day.zfill(2))
+
+def get_last_modification_day(path):
+    return time.localtime(os.path.getmtime(path)).tm_mday
+
+def add_bday(bday_str):
+    comps = bday_str.strip().split('/')
+    name = comps[0].strip()
+    date_comps = comps[1].split('.')
+    month = date_comps[0]
+    day = date_comps[1]
+
+    cache_path = cache_path_for_day(month, day)
+
+    mode = 'a+'
+    if os.path.exists(cache_path):
+        mode = 'r+'
+
+    with open(cache_path, mode) as f:
+        for line in f.readlines():
+            if name.lower() == line.lower():
+                # NAME ALREADY EXISTS
+                return
+        
+        if mode == 'r+' :
+            f.write('\n')
+
+        f.write(name)
+
+def update_today_cache():
+    local_time = time.localtime()
+    this_day = time.localtime().tm_mday
+    this_month = local_time.tm_mon
+    this_day_cache_path = cache_path_for_day(this_month, this_day)
+    bday_str = ''
+
+    if os.path.exists(this_day_cache_path):
+        with open(this_day_cache_path, 'r') as f:
+            name_type, _ = get_name_type()
+            bdays = []
+
+            for line in f.readlines():
+                line = line.strip()
+
+                if len(line) > 0:
+                    if name_type == 0:
+                        line = line.split(' ')[0].split('-')[0]
+
+                    bdays.append(line.lower().title())
+
+        bday_str = ''
+
+        if len(bdays) > 0:
+            bday_str = ', '.join(bdays)
+
+        with open(today_cache_path, 'w') as f:
+            f.write(bday_str)
+    
+    return bday_str
+
+def get_name_type(): # 0 for short, 1 for long and if it was set or had other value before
+    short_path = cache_path_for_file_name('short')
+    full_path = cache_path_for_file_name('full')
+
+    if '--short' in sys_args or '-s' in sys_args:
+        safe_remove(full_path)
+        open(short_path, 'w').close()
+
+        return 0, True
+    elif '--full' in sys_args or '-f' in sys_args:
+        safe_remove(short_path)
+        open(full_path, 'w').close()
+
+        return 1, True
+    elif os.path.exists(short_path):
+        return 0, False
+    elif os.path.exists(full_path):
+        return 1, False
+
+    open(short_path, 'w').close()
+
+    return 0, True
+
+
+# FLOW
+if not os.path.exists(cache_folder_path):
+    os.makedirs(cache_folder_path)
+
+sys_args = sys.argv
+
+# PRINT HELP IF NEEDED
+if len(sys_args) == 1 or 'help' in sys_args or '-help' in sys_args or 'h' in sys_args or '-help' in sys_args:
+    print(
+'''
+Usage:          bday [options]
+
+today, t        Desctiption: Show birthdays for today
+--full, -f      Description: when pased together with today, full names will be shown instead of short ones
+--short, -s     Description: when pased together with today, short names will be shown instead of full ones
+
+--add, -a       Desctiption: Add new birthday(s)
+                Format:      name/month.year
+                             or if file
+                             '\\n' separated lines, each line a birthday in the format from above
+                Usage:       bday -a 'john doe/4.23'
+                             or
+                             bday -a ~/path/to/file_name.txt
+'''
+    )
+    exit(0)
+
+# GET TODAYS BIRTHDAYS
+if 'today' in sys_args or 't' in sys_args:
+    _, is_new_type = get_name_type()
+
+    # CHECK CACHE
+    if os.path.exists(today_cache_path) and not is_new_type:
+        if time.localtime().tm_mday == get_last_modification_day(today_cache_path):
+            with open(today_cache_path, 'r') as f:
+                bday_str = f.read()
+
+                if len(bday_str) > 0:
+                    print(bday_str)
+                
+                exit(0)
+    
+    # CREATE CACHE
+    bday_str = update_today_cache()
+
+    if len(bday_str) > 0:
+        print(bday_str)
+
+    exit(0)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--add', '-a', help="Add a new birthday(s)", type=str, default=None)
+args = parser.parse_args()
+
+# ADD NEW BIRTHDAY(S)
+if args.add is not None:
+    if os.path.exists(args.add):
+        # IS A VALID PATH
+        with open(args.add, 'r') as f:
+            for line in f.readlines():
+                add_bday(line)
+    else:
+        add_bday(args.add)
+    
+    update_today_cache()
