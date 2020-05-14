@@ -4,7 +4,7 @@
 
 ## Install
 ~~~~shell
-cd /usr/local/bin && wget https://raw.githubusercontent.com/kkristof200/bday_cli/master/bday && chmod u+x bday
+cd /usr/local/bin && wget https://raw.githubusercontent.com/kkristof200/bday/master/bday && chmod u+x bday
 ~~~~
 
 ## Usage
@@ -30,6 +30,23 @@ today, t        Desctiption: Show birthdays for today
 ~~~~
 
 ## ADD TO POWERLEVEL10K AS PROMPT ELEMENT
+Download bdaysh, since it's fasteer for this task
+~~~~shell
+cd /usr/local/bin && wget https://raw.githubusercontent.com/kkristof200/bday/master/bdaysh && chmod u+x bdaysh
+~~~~
+~~~~
+SPEED COMPARISON bday v bdaysh
+
+#bday
+real    0m0.061s
+user    0m0.034s
+sys     0m0.020s
+
+#bdaysh
+real    0m0.037s
+user    0m0.008s
+sys     0m0.019s
+~~~~
 Open iterm and run
 ~~~~shell
 nano ~/.p10k.zsh
@@ -47,7 +64,7 @@ typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
 Add this function to the bottom
 ~~~~shell
 function prompt_bday() {
-  bday_str=$(bday today -s)
+  bday_str=$(bdaysh)
 
   if [ "$bday_str" != "" ]; then
     p10k segment -f 208 -i '' -t $bday_str
