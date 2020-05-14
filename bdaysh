@@ -1,0 +1,16 @@
+#!/bin/bash
+
+CACHE_PATH="$HOME/.bday_cache/today"
+
+if [ -f "$CACHE_PATH" ]; then
+    # CACHE_PATH EXISTS
+    cache_age_seconds=$(expr $(date +"%s") - $(date -r $CACHE_PATH +"%s"))
+
+    if [ "$(date +"%d")" != "$(date -r $CACHE_PATH +"%d")" ]; then
+        echo $(bday today)
+    else
+        echo "$(cat $CACHE_PATH)"
+    fi
+else
+    echo $(bday today)
+fi
