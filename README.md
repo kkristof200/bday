@@ -4,7 +4,9 @@
 
 ## Install
 ~~~~shell
-cd /usr/local/bin && wget https://raw.githubusercontent.com/kkristof200/bday/master/bday && chmod u+x bday
+wget https://raw.githubusercontent.com/kkristof200/bday/master/bday -O /usr/local/bin/bday && chmod u+x /usr/local/bin/bday
+# or
+curl https://raw.githubusercontent.com/kkristof200/bday/master/bday > /usr/local/bin/bday && chmod u+x /usr/local/bin/bday
 ~~~~
 
 ## Usage
