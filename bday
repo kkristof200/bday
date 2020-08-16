@@ -126,7 +126,7 @@ today, t        Desctiption: Show birthdays for today
 --short, -s     Description: when pased together with today, short names will be shown instead of full ones
 
 --add, -a       Desctiption: Add new birthday(s)
-                Format:      name/month.year
+                Format:      name/month.day
                              or if file
                              '\\n' separated lines, each line a birthday in the format from above
                 Usage:       bday -a 'john doe/4.23' # bday -a 'name/month.day'

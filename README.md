@@ -3,14 +3,16 @@
 ![screenshot](https://i.imgur.com/3jPwKR7.png)
 
 ## Install
-~~~~shell
+
+````shell
 wget https://raw.githubusercontent.com/kkristof200/bday/master/bday -O /usr/local/bin/bday && chmod u+x /usr/local/bin/bday
 # or
 curl https://raw.githubusercontent.com/kkristof200/bday/master/bday > /usr/local/bin/bday && chmod u+x /usr/local/bin/bday
-~~~~
+````
 
 ## Usage
-~~~~
+
+````
 Examples
 bday -a 'john doe/5.13'
 bday t -s
@@ -23,20 +25,23 @@ today, t        Desctiption: Show birthdays for today
 --short, -s     Description: pass together with today, to show short names
 
 --add, -a       Desctiption: Add new birthday(s)
-                Format:      name/month.year
+                Format:      name/month.day
                              or if file
                              '\\n' separated lines, each line a birthday in the format from above
-                Usage:       bday -a 'john doe/4.23'
+                Usage:       bday -a 'john doe/4.23' # bday -a 'name/month.day'
                              or
                              bday -a ~/path/to/file_name.txt
-~~~~
+````
 
 ## ADD TO POWERLEVEL10K AS PROMPT ELEMENT
+
 Download bdaysh, since it's fasteer for this task
-~~~~shell
+
+````shell
 cd /usr/local/bin && wget https://raw.githubusercontent.com/kkristof200/bday/master/bdaysh && chmod u+x bdaysh
-~~~~
-~~~~
+````
+
+````
 SPEED COMPARISON bday v bdaysh
 
 #bday
@@ -48,23 +53,27 @@ sys     0m0.020s
 real    0m0.037s
 user    0m0.008s
 sys     0m0.019s
-~~~~
+````
+
 Open iterm and run
-~~~~shell
+
+````shell
 nano ~/.p10k.zsh
-~~~~
+````
 
 Add bday to prompt elements
-~~~~shell
+
+````shell
 typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
   ... other elments ...
   bday
   ... other elments ...
 )
-~~~~
+````
 
 Add this function to the bottom
-~~~~shell
+
+````shell
 function prompt_bday() {
   bday_str=$(bdaysh)
 
@@ -72,13 +81,16 @@ function prompt_bday() {
     p10k segment -f 208 -i '' -t $bday_str
   fi
 }
-~~~~
+````
+
  - is the cake font used from [nerd-fonts](https://github.com/ryanoasis/nerd-fonts). Either install it and add it to terminal/iterm or change the icon in the script above
 
 Close editor and run
-~~~~shell
+
+````shell
 source ~/.p10k.zsh
-~~~~
+````
 
 ## Dependencies
+
 python
