@@ -91,12 +91,12 @@ def get_name_type(): # 0 for short, 1 for long and if it was set or had other va
     short_path = cache_path_for_file_name('short')
     full_path = cache_path_for_file_name('full')
 
-    if '--short' in sys_args or '-s' in sys_args:
+    contains_arg(['s', 'short']):
         safe_remove(full_path)
         open(short_path, 'w').close()
 
         return 0, True
-    elif '--full' in sys_args or '-f' in sys_args:
+    elif contains_arg(['f', 'full']):
         safe_remove(short_path)
         open(full_path, 'w').close()
 
@@ -110,15 +110,13 @@ def get_name_type(): # 0 for short, 1 for long and if it was set or had other va
 
     return 0, True
 
+def contains_arg(args):
+    for arg in args:
+        for sys_arg in sys.argv:
+            if arg.lower() == sys_arg.lower().strip('-'):
+                return True
 
-# FLOW
-if not os.path.exists(cache_folder_path):
-    os.makedirs(cache_folder_path)
-
-sys_args = sys.argv
-
-# PRINT HELP IF NEEDED
-if len(sys_args) == 1 or 'help' in sys_args or '-help' in sys_args or 'h' in sys_args or '-help' in sys_args:
+def show_help():
     print(
 '''
 Usage:          bday [options]
@@ -138,8 +136,16 @@ today, t        Desctiption: Show birthdays for today
     )
     exit(0)
 
+# FLOW
+if not os.path.exists(cache_folder_path):
+    os.makedirs(cache_folder_path)
+
+# PRINT HELP IF NEEDED
+if len(sys.argv) == 1 or contains_arg(['h', 'help']):
+    show_help()
+
 # GET TODAYS BIRTHDAYS
-if 'today' in sys_args or 't' in sys_args:
+if contains_arg(['t', 'today']):
     _, is_new_type = get_name_type()
 
     # CHECK CACHE
