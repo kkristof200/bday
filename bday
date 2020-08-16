@@ -129,7 +129,7 @@ today, t        Desctiption: Show birthdays for today
                 Format:      name/month.year
                              or if file
                              '\\n' separated lines, each line a birthday in the format from above
-                Usage:       bday -a 'john doe/4.23'
+                Usage:       bday -a 'john doe/4.23' # bday -a 'name/month.day'
                              or
                              bday -a ~/path/to/file_name.txt
 '''
