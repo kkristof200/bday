@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # IMPORTS
 from __future__ import print_function
-import os, argparse, sys, time
-
+import io, os, argparse, sys, time
 
 # PATHS
 home_path = os.path.expanduser('~')
@@ -45,16 +44,16 @@ def add_bday(bday_str):
     if os.path.exists(cache_path):
         mode = 'r+'
 
-    with open(cache_path, mode) as f:
+    with io.open(cache_path, mode, encoding='utf8') as f:
         for line in f.readlines():
-            if name.lower() == line.lower():
+            if name.lower().decode('utf8') == line.lower():
                 # NAME ALREADY EXISTS
                 return
-        
-        if mode == 'r+' :
-            f.write('\n')
 
-        f.write(name)
+        if mode == 'r+' :
+            f.write(u'\n')
+
+        f.write(name.decode('utf8'))
 
 def update_today_cache():
     local_time = time.localtime()
@@ -64,11 +63,11 @@ def update_today_cache():
     bday_str = ''
 
     if os.path.exists(this_day_cache_path):
-        with open(this_day_cache_path, 'r') as f:
+        with io.open(this_day_cache_path, 'r', encoding="utf-8") as f:
             name_type, _ = get_name_type()
             bdays = []
 
-            for line in f.readlines():
+            for line in f.read().split('\n'):
                 line = line.strip()
 
                 if len(line) > 0:
@@ -83,7 +82,7 @@ def update_today_cache():
             bday_str = ', '.join(bdays)
 
         with open(today_cache_path, 'w') as f:
-            f.write(bday_str)
+            f.write(bday_str.encode('utf8'))
     
     return bday_str
 
